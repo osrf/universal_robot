@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="limited" default="false"/>
-  <arg name="effort_interface" default="false"/>
+  <arg name="limited" default="false" />
+  <arg name="use_velocity_interface" default="false" />
+  <arg name="use_effort_interface" default="false" />
 
-  <param unless="$(arg limited)" name="robot_description" command="$(find xacro)/xacro.py '$(find ur_description)/urdf/ur10_robot.urdf.xacro' use_effort_interface:=$(arg effort_interface)" />
-  <param if="$(arg limited)" name="robot_description" command="$(find xacro)/xacro.py '$(find ur_description)/urdf/ur10_joint_limited_robot.urdf.xacro' use_effort_interface:=$(arg effort_interface)" />
+  <param name="robot_description" command="$(find xacro)/xacro.py
+  	'$(find ur_description)/urdf/ur10_robot.urdf.xacro'
+  	limited:=$(arg limited)
+  	use_velocity_interface:=$(arg use_velocity_interface)
+  	use_effort_interface:=$(arg use_effort_interface)" />
 </launch>

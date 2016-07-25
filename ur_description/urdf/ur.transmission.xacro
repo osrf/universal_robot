@@ -1,7 +1,32 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="ur_arm_transmission" params="prefix joint_interface:=PositionJointInterface">
+  <xacro:arg name="use_velocity_interface" default="false" />
+  <xacro:arg name="use_effort_interface" default="false" />
+
+  <xacro:macro name="ur_arm_transmission" params="prefix">
+
+    <!-- if use_position_interface create PositionJointInterface based transmissions -->
+    <xacro:unless value="$(arg use_velocity_interface)">
+    <xacro:unless value="$(arg use_effort_interface)">
+      <!-- option1 -->
+      <xacro:ur_arm_transmission_impl prefix="${prefix}" joint_interface="PositionJointInterface" />
+    </xacro:unless>
+    </xacro:unless>
+    <!-- if use_velocity_interface create VelocityJointInterface based transmissions -->
+    <xacro:if value="$(arg use_velocity_interface)">
+      <!-- option2 -->
+      <xacro:ur_arm_transmission_impl prefix="${prefix}" joint_interface="VelocityJointInterface" />
+    </xacro:if>
+    <!-- if use_effort_interface create EffortJointInterface based transmissions -->
+    <xacro:if value="$(arg use_effort_interface)">
+      <!-- option3 -->
+      <xacro:ur_arm_transmission_impl prefix="${prefix}" joint_interface="EffortJointInterface" />
+    </xacro:if>
+
+  </xacro:macro>
+
+  <xacro:macro name="ur_arm_transmission_impl" params="prefix joint_interface">
 
     <transmission name="${prefix}shoulder_pan_trans">
       <type>transmission_interface/SimpleTransmission</type>
@@ -12,7 +37,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
+
     <transmission name="${prefix}shoulder_lift_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}shoulder_lift_joint">
@@ -22,7 +47,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
+
     <transmission name="${prefix}elbow_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}elbow_joint">
@@ -32,7 +57,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
+
     <transmission name="${prefix}wrist_1_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_1_joint">
@@ -42,7 +67,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
+
     <transmission name="${prefix}wrist_2_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_2_joint">
@@ -52,7 +77,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
-  
+
     <transmission name="${prefix}wrist_3_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${prefix}wrist_3_joint">
