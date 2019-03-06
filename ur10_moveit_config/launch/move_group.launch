@@ -1,8 +1,15 @@
 <launch>
   <arg name="limited" default="false"/>
+  <arg name="arm_namespace"/>
+  <group ns="$(arg arm_namespace)">
+
+  <remap from="/tf" to="tf"/>
+  <remap from="/tf_static" to="tf_static"/>
+  <remap from="/follow_joint_trajectory" to="arm/follow_joint_trajectory"/>
 
   <include file="$(find ur10_moveit_config)/launch/planning_context.launch">
     <arg name="limited" value="$(arg limited)" />
+    <arg name="robot_description" value="robot_description"/>
   </include>
 
   <!-- GDB Debug Option -->
@@ -67,5 +74,6 @@
     <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)" />
     <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
   </node>
+  </group>
 
 </launch>
